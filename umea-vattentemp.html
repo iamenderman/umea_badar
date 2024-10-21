@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="sv">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+
+<head>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <script>
+        var bolesholmarna = "64918380aab65538e6c434f3"; //name: Friluftsbad_Bölesholmarna_Bad 5
+        var bettnes = "6491a63f32e32661a077e103"; //name: Friluftsbad_Bettnessand_Bad 4
+        var hornefors = "647061879078d26ca6c82501"; //name: Friluftsbad_Gråbo_Bad 7 
+        var karleksviken = "665446613ed316e43fd3d779"; //name: Friluftsbad_Kärleksviken_Bad 2
+        var nydalabadet = "665443fb3547d62cae5d32e1"; //name: Friluftsbad_Nydalabadet_Bad 1
+        var holma = "665446b1ec5f0eb212a67864"; //name: Friluftsbad_Ljumviken_Bad 6
+        var stok = "647060989078d26ca6c824b6"; //name: Friluftsbad_Stöcksjöbadet_Bad 3
+    </script>
+
+    <h1 id="bolesholmarna-text">Bölesholmarna</h1>
+    <canvas id="bolesholmarna" style="width: 90vw;"></canvas>
+    <h1 id="bettnes-text">Bettnessands havsbad</h1>
+    <canvas id="bettnes" style="width: 90vw;"></canvas>
+    <h1 id="hornefors-text">Hörnefors</h1>
+    <canvas id="hornefors" style="width: 90vw;"></canvas>
+    <h1 id="karleksviken-text">Kärleksviken</h1>
+    <canvas id="karleksviken" style="width: 90vw;"></canvas>
+    <h1 id="nydalabadet-text">Nydalabadet</h1>
+    <canvas id="nydalabadet" style="width: 90vw;"></canvas>
+    <h1 id="holma-text">Holmsund havsbad</h1>
+    <canvas id="holma" style="width: 90vw;"></canvas>
+    <h1 id="stok-text">Stöcksjön</h1>
+    <canvas id="stok" style="width: 90vw;"></canvas>
+
+    <script>
+        async function create_chart(id, target) {
+            function formate_date(raw_date) {
+                const date = new Date(raw_date.time);
+                const hour = date.getHours();
+                const min = date.getMinutes();
+                return (hour < 10 ? "0" + hour : hour) + "." + (min == 0 ? "0" + min : min);
+            }
+
+            const options = {
+                headers: {
+                    "Content-Type": "application/json",
+                    "accept": "application/json"
+                },
+                method: "GET",
+            };
+
+            await fetch("https://fritid-api.umea.se/yggioapi.aspx?id=" + id, options)
+                .then(async response => {
+                    var res = await response.json();
+                    var data = res.filter((value, index, Arr) => {
+                        return index % 9 == 0;
+                    });
+
+                    var temps = data.map(item => (item.value));
+                    var dates = data.map(item => formate_date(item));
+
+                    new Chart(target, {
+                        type: "line",
+                        data: {
+                            labels: dates,
+                            datasets: [{
+                                fill: false,
+                                borderColor: "#3cba9f",
+                                data: temps
+                            }]
+                        },
+                        options: {
+                            legend: { display: false },
+                            scales: {
+                                yAxes: [{
+                                    display: true,
+                                    ticks: {
+                                        steps: 3,
+                                        stepValue: 3,
+                                        max: 27,
+                                        min: 3
+                                    }
+                                }]
+                            }
+                        }
+                    });
+
+                    if (data.length == 0) {
+                        document.getElementById(target + "-text").innerHTML += ", " + "server svarar inte";
+                    } else {
+                        document.getElementById(target + "-text").innerHTML += ", " + data[data.length - 1].value + "&deg;C";
+                    }
+
+                })
+                .catch(e => {
+                    console.error(e);
+                });
+
+        }
+
+        function build_charts() {
+            create_chart(bolesholmarna, "bolesholmarna");
+            create_chart(bettnes, "bettnes");
+            create_chart(hornefors, "hornefors");
+            create_chart(karleksviken, "karleksviken");
+            create_chart(nydalabadet, "nydalabadet");
+            create_chart(holma, "holma");
+            create_chart(stok, "stok");
+        }
+
+        build_charts();
+
+    </script>
+    </div>
+</body>
+
+</html>

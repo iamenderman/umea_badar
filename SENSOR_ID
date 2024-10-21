@@ -1,0 +1,18 @@
+// BÖLESHOLMARNA
+var sSensorId = "64918380aab65538e6c434f3"; //name: Friluftsbad_Bölesholmarna_Bad 5
+
+//BETTNES
+var sSensorId = "6491a63f32e32661a077e103"; //name: Friluftsbad_Bettnessand_Bad 4
+
+//HÖRNEFORS 
+var sSensorId = "647061879078d26ca6c82501"; //name: Friluftsbad_Gråbo_Bad 7 
+
+// NYDALASJÖLN 
+var sSensorId = "665446613ed316e43fd3d779"; //name: Friluftsbad_Kärleksviken_Bad 2
+var sSensorId = "665443fb3547d62cae5d32e1"; //name: Friluftsbad_Nydalabadet_Bad 1
+
+//HOLMSUND
+var sSensorId = "665446b1ec5f0eb212a67864"; //name: Friluftsbad_Ljumviken_Bad 6
+
+// STÖCK
+var sSensorId = "647060989078d26ca6c824b6"; //name: Friluftsbad_Stöcksjöbadet_Bad 3
